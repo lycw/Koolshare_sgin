@@ -1,2 +1,2 @@
 /usr/bin/sh
-echo "Hello,Wold!"
+echo "Hello,World!"
