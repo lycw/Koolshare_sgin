@@ -1,0 +1,43 @@
+#-*-'utf-8'
+from urllib import request
+from http.cookiejar import CookieJar
+from urllib import parse
+from bs4 import BeautifulSoup
+import requests
+
+cookiejar = CookieJar()
+handler = request.HTTPCookieProcessor(cookiejar)
+opener = request.build_opener(handler)
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36'
+}
+data = {
+    "username": "***",
+    "password": "***"
+}
+
+lycw_url = 'https://koolshare.cn/space-uid-305891.html'
+url_login = 'https://koolshare.cn/member.php?mod=logging&action=login&loginsubmit=yes&infloat=yes&lssubmit=yes&inajax=1'
+
+
+def no_login():
+    reqa = requests.get(lycw_url)
+    resqb = reqa.text
+    reqqe = BeautifulSoup(resqb, "html.parser")
+    jifen = reqqe.find_all("li")[26].text
+    return jifen
+
+
+def yes_login():
+    req = request.Request(url_login, data=parse.urlencode(
+        data).encode('utf-8'), headers=headers)
+    opener.open(req)
+    req = request.Request(lycw_url, headers=headers)
+    resp = opener.open(req)
+    demo = resp.read().decode('utf-8')
+    soup = BeautifulSoup(demo, "html.parser")
+    jifen1 = soup.find_all("li")[40].text
+    return jifen1
+
+
+print(no_login(), ">>", yes_login())
