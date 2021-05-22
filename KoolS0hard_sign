@@ -16,12 +16,12 @@ data = {
     "password": "***"
 }
 
-lycw_url = 'https://koolshare.cn/space-uid-305891.html'
+sgin_url = 'https://koolshare.cn/****.html' #个人中心
 url_login = 'https://koolshare.cn/member.php?mod=logging&action=login&loginsubmit=yes&infloat=yes&lssubmit=yes&inajax=1'
 
 
 def no_login():
-    reqa = requests.get(lycw_url)
+    reqa = requests.get(sgin_url)
     resqb = reqa.text
     reqqe = BeautifulSoup(resqb, "html.parser")
     jifen = reqqe.find_all("li")[26].text
@@ -32,7 +32,7 @@ def yes_login():
     req = request.Request(url_login, data=parse.urlencode(
         data).encode('utf-8'), headers=headers)
     opener.open(req)
-    req = request.Request(lycw_url, headers=headers)
+    req = request.Request(sgin_url, headers=headers)
     resp = opener.open(req)
     demo = resp.read().decode('utf-8')
     soup = BeautifulSoup(demo, "html.parser")
