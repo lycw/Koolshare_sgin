@@ -1,0 +1,21 @@
+from selenium import webdriver
+# from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.chrome.options import Options
+import time
+
+url = "https://wwa.qtycloud.xyz/auth/login"
+chrome_options=Options()
+chrome_options.add_argument('--headless')
+driver = webdriver.Chrome(chrome_options=chrome_options)
+driver.get(url)
+time.sleep(3)
+
+driver.find_element_by_id("email").send_keys("账号")
+driver.find_element_by_id("password").send_keys("密码")
+driver.find_element_by_class_name("btn").click()
+time.sleep(3)
+
+driver.find_element_by_class_name("far").click()	#点击签到
+print(driver.page_source)
+driver.close()	#关闭浏览器
+driver.quit()	#退出chromedriver进程
