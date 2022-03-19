@@ -1,21 +1,49 @@
+#-*-'utf-8'
+from urllib import request
+from http.cookiejar import CookieJar
+from urllib import parse
+from bs4 import BeautifulSoup
+import requests
+import re
 from selenium import webdriver
-# from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.chrome.options import Options
 import time
 
-url = "https://wwa.qtycloud.xyz/auth/login"
+
+cookiejar = CookieJar()
+handler = request.HTTPCookieProcessor(cookiejar)
+opener = request.build_opener(handler)
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36',
+    'cookie': '****'  #cookie
+}
+
+lycw_url = 'https://wwa.qtycloud.xyz/auth/login'
+qtycloud_url = 'https://wwa.qtycloud.xyz/user'
+
 chrome_options=Options()
 chrome_options.add_argument('--headless')
 driver = webdriver.Chrome(chrome_options=chrome_options)
-driver.get(url)
-time.sleep(3)
-
-driver.find_element_by_id("email").send_keys("账号")
-driver.find_element_by_id("password").send_keys("密码")
+driver.get(lycw_url)
+time.sleep(2)
+driver.find_element_by_id("email").send_keys("name")
+driver.find_element_by_id("password").send_keys("passwd")
 driver.find_element_by_class_name("btn").click()
-time.sleep(3)
-
+time.sleep(2)
 driver.find_element_by_class_name("far").click()	#点击签到
 print(driver.page_source)
 driver.close()	#关闭浏览器
-driver.quit()	#退出chromedriver进程
+driver.quit()	#退出chrome
+
+
+req = requests.get(qtycloud_url, headers=headers)
+demo = req.text
+html1 = r'<span class="counter">(.*?)</span>'
+jifen1 = re.findall(html1, demo)
+soup = BeautifulSoup(demo, 'html.parser')
+html = soup.find_all("li", class_= "breadcrumb-item active")
+
+print("剩余流量:" + jifen1[1] + "GB")# + ">>" + html[1] + "GB")
+print("免费天数:" + jifen1[0] + "天")
+print(html[0].string)
+
